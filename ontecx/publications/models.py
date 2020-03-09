@@ -13,13 +13,21 @@ User = get_user_model()
 
 
 class Publication(models.Model):
+    ARTICLE_CATEGORIES = (
+        ('startup', 'STARTUP'),
+        ('life style', 'LIFE STYLE'),
+        ('events', 'EVENTS'),
+        ('technology jobs', 'TECHNOLOGY JOBS'),
+        ('funding', 'FUNDING'),
+        ('reviews and deals', 'REVIEWS AND DEALS'),
+        ('technologies and gadgets', 'TECHNOLOGIES AND GADGETS'),
+
+    )
     title = models.CharField(_('title'), max_length=250)
     image = models.FileField(_("image"), storage=PrivateS3Boto3Storage())
     content = models.TextField(_('content'))
     date_created = models.DateTimeField(_('date_created'), auto_now_add=True)
-    publication_category = Choices('startup', 'life_style', "events", "technology jobs",
-    "government in tech", "funding", "reviews and deals", "technologies and gadgets"
-    )
+    publication_category = models.CharField(max_length=200, choices=ARTICLE_CATEGORIES, null=True)
     published_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name="published_by")
 
     class Meta:
