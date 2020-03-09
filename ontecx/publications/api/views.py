@@ -5,14 +5,14 @@ from ..models import Publication
 from .serializers import PublicationSerializer
 
 class PublicationListAPIView(generics.ListAPIView):
-    queryset  = Publication.objects.all().order_by("-date_created")
+    queryset  = Publication.objects.all()
     serializer_class = PublicationSerializer
 
     def get_queryset(self):
         try:
             query = Publication.objects.latest()
         except Publication.DoesNotExist:
-            return self.queryset
+            return self.queryset.order_by("-date_created")
         return query
 
 class PublicationDetailAPIVIew(generics.RetrieveAPIView):
