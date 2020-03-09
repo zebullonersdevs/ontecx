@@ -101,7 +101,7 @@ AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
 #  https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
 AWS_DEFAULT_ACL = None
 # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
-AWS_S3_REGION_NAME = env("DJANGO_AWS_S3_REGION_NAME", default=None)
+#AWS_S3_REGION_NAME = env("DJANGO_AWS_S3_REGION_NAME", default=None)
 # STATIC
 # ------------------------
 STATICFILES_STORAGE = "config.settings.local.MediaRootS3Boto3Storage"
