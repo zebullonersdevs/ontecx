@@ -49,3 +49,6 @@ if settings.DEBUG:
         import debug_toolbar
 
         urlpatterns = [path("__debug__/", include(debug_toolbar.urls))] + urlpatterns
+
+handler500 = 'ontecx.users.views.server_error'
+handler404 = 'ontecx.users.views.not_found_request'
