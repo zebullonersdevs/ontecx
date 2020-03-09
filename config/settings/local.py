@@ -24,12 +24,6 @@ CACHES = {
 }
 
 if DEBUG:
-    ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["ontecx-io.herokuapp.com"])
-    DATABASES["default"] = env.db("DATABASE_URL")  # noqa F405
-    DATABASES["default"]["ATOMIC_REQUESTS"] = True  # noqa F405
-    DATABASES["default"]["CONN_MAX_AGE"] = env.int("CONN_MAX_AGE", default=50)
-
-else:
     DATABASES = {
     'default': {
          'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -42,6 +36,14 @@ else:
         }
 
     ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]
+
+
+else:
+
+    ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["ontecx-io.herokuapp.com"])
+    DATABASES["default"] = env.db("DATABASE_URL")  # noqa F405
+    DATABASES["default"]["ATOMIC_REQUESTS"] = True  # noqa F405
+    DATABASES["default"]["CONN_MAX_AGE"] = env.int("CONN_MAX_AGE", default=50)
 
 
 # EMAIL
