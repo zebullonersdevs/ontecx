@@ -4,14 +4,14 @@ from .base import env
 # GENERAL
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#debug
-DEBUG = True
+DEBUG = False
 # https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 SECRET_KEY = env(
     "DJANGO_SECRET_KEY",
     default="Ob6dBWwpsnTmuDG0NgATa4477Ju9YALJXPSEN3LVVMmuplSNUo8MP9Gxtbv6AM4x",
 )
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]
+
 
 # CACHES
 # ------------------------------------------------------------------------------
@@ -22,6 +22,27 @@ CACHES = {
         "LOCATION": "",
     }
 }
+
+if DEBUG:
+    ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["ontecx-io.herokuapp.com"])
+    DATABASES["default"] = env.db("DATABASE_URL")  # noqa F405
+    DATABASES["default"]["ATOMIC_REQUESTS"] = True  # noqa F405
+    DATABASES["default"]["CONN_MAX_AGE"] = env.int("CONN_MAX_AGE", default=50)
+
+else:
+    DATABASES = {
+    'default': {
+         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+         'NAME': 'ontecx',
+         'USER': 'postgres',
+         'PASSWORD': 'emma',
+         'HOST': '',
+         'PORT': '5432',
+         }
+        }
+
+    ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]
+
 
 # EMAIL
 # ------------------------------------------------------------------------------
@@ -37,16 +58,6 @@ INSTALLED_APPS = ["whitenoise.runserver_nostatic"] + INSTALLED_APPS  # noqa F405
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-         'NAME': 'ontecx',
-         'USER': 'postgres',
-         'PASSWORD': 'emma',
-         'HOST': '',
-         'PORT': '5432',
-         }
-}
 
 
 # django-debug-toolbar
@@ -77,37 +88,64 @@ INSTALLED_APPS += ["django_extensions"]  # noqa F405
 # Your stuff...
 # ------------------------------------------------------------------------------
 
+if DEBUG:
+    # STORAGES
+    # ------------------------------------------------------------------------------
+    # https://django-storages.readthedocs.io/en/latest/#installation
 
-# STORAGES
-# ------------------------------------------------------------------------------
-# https://django-storages.readthedocs.io/en/latest/#installation
-INSTALLED_APPS += ["storages"]  # noqa F405
-# https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
-AWS_ACCESS_KEY_ID = "AKIAYQZZJV3TMKEZOFMC"   #env("DJANGO_AWS_ACCESS_KEY_ID") ""
-# https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
-AWS_SECRET_ACCESS_KEY = "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#env" #("DJANGO_AWS_SECRET_ACCESS_KEY")
-# https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
-AWS_STORAGE_BUCKET_NAME = "ontecx" #env("DJANGO_AWS_STORAGE_BUCKET_NAME")
-# https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
-AWS_QUERYSTRING_AUTH = False
-# DO NOT change these unless you know what you're doing.
-_AWS_EXPIRY = 60 * 60 * 24 * 7
-# https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
-AWS_S3_OBJECT_PARAMETERS = {
-    "CacheControl": f"max-age={_AWS_EXPIRY}, s-maxage={_AWS_EXPIRY}, must-revalidate"
+    INSTALLED_APPS += ["storages"]  # noqa F405
+    # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
+    AWS_ACCESS_KEY_ID = "AKIAYQZZJV3TMKEZOFMC"   #env("DJANGO_AWS_ACCESS_KEY_ID") ""
+    # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
+    AWS_SECRET_ACCESS_KEY = "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#env" #("DJANGO_AWS_SECRET_ACCESS_KEY")
+    # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
+    AWS_STORAGE_BUCKET_NAME = "ontecx" #env("DJANGO_AWS_STORAGE_BUCKET_NAME")
+    # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
+    AWS_QUERYSTRING_AUTH = False
+    # DO NOT change these unless you know what you're doing.
+    _AWS_EXPIRY = 60 * 60 * 24 * 7
+    # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
+    AWS_S3_OBJECT_PARAMETERS = {
+        "CacheControl": f"max-age={_AWS_EXPIRY}, s-maxage={_AWS_EXPIRY}, must-revalidate"
 
-}
-AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
-#  https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
-AWS_DEFAULT_ACL = None
-# https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
-#AWS_S3_REGION_NAME = env("DJANGO_AWS_S3_REGION_NAME", default=None)
-# STATIC
-# ------------------------
-STATICFILES_STORAGE = "config.settings.local.MediaRootS3Boto3Storage"
-STATIC_LOCATION = 'static'
-STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{STATIC_LOCATION}/'
-# MEDIA
+    }
+    AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+    #  https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
+    AWS_DEFAULT_ACL = None
+    # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
+    #AWS_S3_REGION_NAME = env("DJANGO_AWS_S3_REGION_NAME", default=None)
+    # STATIC
+    # ------------------------
+    STATICFILES_STORAGE = "config.settings.local.MediaRootS3Boto3Storage"
+    STATIC_LOCATION = 'static'
+    STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{STATIC_LOCATION}/'
+
+    #endregion
+    DEFAULT_FILE_STORAGE = "config.settings.local.MediaRootS3Boto3Storage"
+    MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/media/"
+    PUBLIC_MEDIA_LOCATION = 'media'
+    MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{PUBLIC_MEDIA_LOCATION}/'
+
+
+
+    # MEDIA
+
+
+else:
+    STATIC_URL = '/staticfiles/'
+    STATIC_ROOT = str(ROOT_DIR("staticfiles")) #os.path.join(APPS_DIR, 'staticfiles')
+    MEDIA_URL = '/mediafiles/'
+    MEDIA_ROOT = str(ROOT_DIR("mediafiles")) #os.path.join(APPS_DIR, 'mediafiles')
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+    STATICFILES_FINDERS = [
+
+        'django.contrib.staticfiles.finders.FileSystemFinder',
+        'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+
+        ]
+
+    #STATICFILES_DIRS = (os.path.join(ROOT_DIR, 'static'),)
 # ------------------------------------------------------------------------------
 # region http://stackoverflow.com/questions/10390244/
 # Full-fledge class: https://stackoverflow.com/a/18046120/104731
@@ -130,14 +168,7 @@ class PrivateS3Boto3Storage(S3Boto3Storage):
     custom_domain = False
 
 
-# endregion
-DEFAULT_FILE_STORAGE = "config.settings.local.MediaRootS3Boto3Storage"
-MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/media/"
-PUBLIC_MEDIA_LOCATION = 'media'
-MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{PUBLIC_MEDIA_LOCATION}/'
-
-
-
+#
  # s3 private media settings
 PRIVATE_MEDIA_LOCATION = 'private'
 PRIVATE_FILE_STORAGE = 'config.settings.local.PrivateS3Boto3Storage'
