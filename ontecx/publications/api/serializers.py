@@ -6,15 +6,19 @@ from ..models import Publication, PublicationCategory
 class PublicationSerializer(serializers.ModelSerializer):
     image_url = serializers.SerializerMethodField()
     uploaded_at = serializers.SerializerMethodField()
+    category_name = serializers.SerializerMethodField()
     class Meta:
         model = Publication
-        fields = ("title", "content",  "uploaded_at", "image_url")
+        fields = ("id", "title", "content",  "uploaded_at", "image_url", "category_name")
 
     def get_image_url(self, instance):
         return instance.image
 
     def get_uploaded_at(self, instance):
         return instance.date_created
+
+    def get_category_name(self, instance):
+        return instance.publication_category.category
 
 
 class PublicationCreateSerializer(serializers.ModelSerializer):

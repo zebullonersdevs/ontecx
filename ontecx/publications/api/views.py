@@ -18,12 +18,21 @@ class PublicationListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         return self.queryset.order_by("-date_created")
-        #return query
 
-class PublicationDetailAPIVIew(generics.RetrieveAPIView):
+
+class PublicationFilterAPIView(generics.ListAPIView):
+    queryset  = Publication.objects.all()
+    serializer_class = PublicationSerializer
+
+    def get_queryset(self):
+        filter_by= self.kwargs['category']
+        return self.queryset.filter(publication_category__category=filter_by).all()
+
+
+class PublicationDetailAPIVIew(generics.RetrieveUpdateDestroyAPIView):
     queryset = Publication
     serializer_class = PublicationSerializer
-    lookup_url_kwargs = "id"
+    lookup_url_kwargs = "pk"
 
 class SponsoredPublicationListAPIView(generics.ListAPIView):
     queryset  = Publication.objects.all()
