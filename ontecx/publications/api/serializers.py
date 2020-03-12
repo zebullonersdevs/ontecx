@@ -22,7 +22,7 @@ class PublicationSerializer(serializers.ModelSerializer):
 
 
 class PublicationCreateSerializer(serializers.ModelSerializer):
-    feeds = PublicationSerializer(required=True)
+    feeds = PublicationSerializer(required=True, many=True)
 
     class Meta:
         fields = ("category", "feeds")
@@ -34,19 +34,19 @@ class PublicationCreateSerializer(serializers.ModelSerializer):
         user = self.context['request'].user
         feed_type = self.context['request'].query_params.get("feed_type")
         publication_category = PublicationCategory.objects.create(published_by=user, **validated_data)
-        #for feed in feeds:
-        publication = Publication.objects.create(publication_category=publication_category, **feeds)
-        if feed_type == "SPONSORED":
-            publication.sponsored_publication = publication
-            publication.save()
-                #SponsoredPublication.objects.create(publication=publication)
-        elif feed_type == "FEATURED":
-            publication.featured_publication = publication
-            publication.save()
+        for feed in feeds:
+            publication = Publication.objects.create(publication_category=publication_category, **feed)
+            if feed_type == "SPONSORED":
+                publication.sponsored_publication = publication
+                publication.save()
 
-                # FeaturedPublication.objects.create(publication=publication)
-        else:
-            pass
+            elif feed_type == "FEATURED":
+                publication.featured_publication = publication
+                publication.save()
+
+
+            else:
+                pass
 
         return publication_category
 

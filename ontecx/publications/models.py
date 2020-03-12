@@ -6,7 +6,6 @@ from django.utils.translation import ugettext_lazy as _
 from model_utils import Choices
 from config.settings.local import  PrivateS3Boto3Storage
 
-
 # Create your models here.
 
 User = get_user_model()
@@ -46,16 +45,6 @@ class Publication(models.Model):
     def __str__(self):
         return "Article published by {}".format(self.title)
 
-
-#class FeaturedPublication(models.Model):
-#    publication = models.ForeignKey(Publication, on_delete=models.CASCADE, related_name="featured")
-
-#    def __str__(self):
-#        return str(self.publication)
-
-
-#class SponsoredPublication(models.Model):
-#    sponsored = models.ForeignKey(Publication, on_delete=models.CASCADE, related_name="sponsored_category")
 
 
 
