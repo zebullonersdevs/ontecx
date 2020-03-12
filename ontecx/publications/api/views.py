@@ -54,7 +54,7 @@ class PublicationUpdateAPIView(generics.UpdateAPIView):
     permission_classes = (IsAdminUser, IsAuthenticated)
     lookup_url_kwarg = 'id'
 
-class  PublicationCreateAPIView(generics.CreateAPIView):
+class PublicationCreateAPIView(generics.CreateAPIView):
     """ when creating feeds you will to specify if the
     type of feed to be a sponsored feed or a featured feed
     by passing feed_type as a query params to the endpoint url,
