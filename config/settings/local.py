@@ -138,6 +138,7 @@ else:
     STATIC_ROOT = str(ROOT_DIR("staticfiles")) #os.path.join(APPS_DIR, 'staticfiles')
     MEDIA_URL = '/mediafiles/'
     MEDIA_ROOT = str(ROOT_DIR("mediafiles")) #os.path.join(APPS_DIR, 'mediafiles')
+    STATICFILES_DIRS = [str(APPS_DIR.path("static"))]
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
     STATICFILES_FINDERS = [
