@@ -13,6 +13,7 @@ django-model-utils==4.0.0  # https://github.com/jazzband/django-model-utils
 
 drf-yasg==1.16.1
 pyfcm==1.4.7
+djangorestframework-simplejwt==4.3.0
 
 
 # Django REST Framework
