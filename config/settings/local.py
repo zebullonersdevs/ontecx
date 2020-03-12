@@ -4,7 +4,7 @@ from .base import env
 # GENERAL
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#debug
-DEBUG = False
+DEBUG = env.bool("DEBUG", default=True)
 # https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 SECRET_KEY = env(
     "DJANGO_SECRET_KEY",
@@ -168,7 +168,6 @@ class PrivateS3Boto3Storage(S3Boto3Storage):
     default_acl = 'private'
     file_overwrite = False
     custom_domain = False
-
 
 #
  # s3 private media settings
