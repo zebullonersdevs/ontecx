@@ -3,6 +3,7 @@ Base settings to build other settings files upon.
 """
 
 import  os
+from datetime import timedelta
 
 import environ
 
@@ -78,7 +79,8 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
 
     "ontecx.users.apps.UsersConfig",
-    "ontecx.publications.apps.PublicationsConfig"
+    "ontecx.publications.apps.PublicationsConfig",
+    "ontecx.notification.apps.NotificationConfig"
 
     # Your stuff: custom apps go here
 ]
@@ -279,9 +281,28 @@ if USE_TZ:
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework.authentication.SessionAuthentication",
-        "rest_framework.authentication.TokenAuthentication",
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.AllowAny",),
 }
 # Your stuff...
 # ------------------------------------------------------------------------------
+NOTICATION_KEY = None 
+
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=4),  # testing
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),  # testing
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
+
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': env("DJANGO_SECRET_KEY", default="Ob6dBWwpsnTmuDG0NgATa4477Ju9YALJXPSEN3LVVMmuplSNUo8MP9Gxtbv6AM4x"),
+    'VERIFYING_KEY': None,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
+
+}
