@@ -25,6 +25,9 @@ class PublicationFilterAPIView(generics.ListAPIView):
 
 
 class PublicationDeleteAPIVIew(generics.DestroyAPIView):
+    """Feed the category id gotten from the response along side
+    with the url path to delete a feed
+    """
     queryset = PublicationCategory
     serializer_class = PublicationCreateSerializer
     lookup_url_kwargs = "pk"
