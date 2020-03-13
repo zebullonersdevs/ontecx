@@ -4,7 +4,7 @@ from .base import env
 # GENERAL
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#debug
-DEBUG = env.bool("DEBUG", default=True)
+DEBUG = env.bool("DEBUG", default=False)
 # https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 SECRET_KEY = env(
     "DJANGO_SECRET_KEY",
@@ -90,7 +90,7 @@ INSTALLED_APPS += ["django_extensions"]  # noqa F405
 # Your stuff...
 # ------------------------------------------------------------------------------
 
-if not DEBUG:
+if DEBUG:
     # STORAGES
     # ------------------------------------------------------------------------------
     # https://django-storages.readthedocs.io/en/latest/#installation
@@ -139,7 +139,7 @@ else:
     MEDIA_URL = '/mediafiles/'
     MEDIA_ROOT = str(ROOT_DIR("mediafiles")) #os.path.join(APPS_DIR, 'mediafiles')
     STATICFILES_DIRS = [str(APPS_DIR.path("static"))]
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    #STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
     STATICFILES_FINDERS = [
 
