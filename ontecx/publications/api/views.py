@@ -1,16 +1,11 @@
 from django.db.models import F
-
 from rest_framework import generics
-from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
 
-from ..models import (
-
-    Publication,
-    PublicationCategory,
-
-)
+from ..models import Publication, PublicationCategory
 from .serializers import PublicationCreateSerializer, PublicationSerializer
 
+from .permission import IsOwner
 
 class PublicationListAPIView(generics.ListAPIView):
     queryset  = Publication.objects.all()
@@ -29,10 +24,12 @@ class PublicationFilterAPIView(generics.ListAPIView):
         return self.queryset.filter(publication_category__category=filter_by).all()
 
 
-class PublicationDetailAPIVIew(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Publication
-    serializer_class = PublicationSerializer
+class PublicationDeleteAPIVIew(generics.DestroyAPIView):
+    queryset = PublicationCategory
+    serializer_class = PublicationCreateSerializer
     lookup_url_kwargs = "pk"
+    permission_classes = (IsAuthenticated, IsOwner)
+
 
 class SponsoredPublicationListAPIView(generics.ListAPIView):
     queryset  = Publication.objects.all()
@@ -51,7 +48,7 @@ class FeaturedPublicationListAPIView(generics.ListAPIView):
 class PublicationUpdateAPIView(generics.UpdateAPIView):
     serializer_class = PublicationSerializer
     queryset = Publication
-    permission_classes = (IsAdminUser, IsAuthenticated)
+    permission_classes = (IsAdminUser, IsAuthenticated, IsOwner)
     lookup_url_kwarg = 'id'
 
 class PublicationCreateAPIView(generics.CreateAPIView):

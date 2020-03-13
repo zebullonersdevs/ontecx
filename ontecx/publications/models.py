@@ -11,7 +11,6 @@ from config.settings.local import  PrivateS3Boto3Storage
 User = get_user_model()
 
 
-
 class PublicationCategory(models.Model):
     ARTICLE_CATEGORIES = (
         ('startup', 'STARTUP'),

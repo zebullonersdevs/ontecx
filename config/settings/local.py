@@ -90,7 +90,7 @@ INSTALLED_APPS += ["django_extensions"]  # noqa F405
 # Your stuff...
 # ------------------------------------------------------------------------------
 
-if DEBUG:
+if not DEBUG:
     # STORAGES
     # ------------------------------------------------------------------------------
     # https://django-storages.readthedocs.io/en/latest/#installation

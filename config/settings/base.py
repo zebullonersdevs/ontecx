@@ -80,7 +80,8 @@ LOCAL_APPS = [
 
     "ontecx.users.apps.UsersConfig",
     "ontecx.publications.apps.PublicationsConfig",
-    "ontecx.notification.apps.NotificationConfig"
+    "ontecx.notification.apps.NotificationConfig",
+    "ontecx.comments.apps.CommentsConfig"
 
     # Your stuff: custom apps go here
 ]
@@ -287,7 +288,7 @@ REST_FRAMEWORK = {
 }
 # Your stuff...
 # ------------------------------------------------------------------------------
-NOTICATION_KEY = None 
+NOTICATION_KEY = None
 
 
 SIMPLE_JWT = {

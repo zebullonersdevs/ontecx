@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from comments.api.serializers import CommentSerializer
+
 from ..models import Publication, PublicationCategory
 
 
@@ -7,9 +9,11 @@ class PublicationSerializer(serializers.ModelSerializer):
     image_url = serializers.SerializerMethodField()
     uploaded_at = serializers.SerializerMethodField()
     category_name = serializers.SerializerMethodField()
+    category_id = serializers.SerializerMethodField()
+    comments  = CommentSerializer(required=False, many=True)
     class Meta:
         model = Publication
-        fields = ("id", "title", "content",  "uploaded_at", "image_url", "category_name")
+        fields = ("id", "title", "content",  "uploaded_at", "image_url", "category_name", "comments", "category_id")
 
     def get_image_url(self, instance):
         return instance.image
@@ -20,12 +24,15 @@ class PublicationSerializer(serializers.ModelSerializer):
     def get_category_name(self, instance):
         return instance.publication_category.category
 
+    def get_category_id(self, instance):
+        return str(instance.publication_category.pk)
+
 
 class PublicationCreateSerializer(serializers.ModelSerializer):
     feeds = PublicationSerializer(required=True, many=True)
 
     class Meta:
-        fields = ("category", "feeds")
+        fields = ("id", "category", "feeds")
         model = PublicationCategory
 
 
@@ -56,6 +63,7 @@ class PublicationCreateSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         publication = Publication.objects.get(publication_category=instance.pk)
         data = {
+            "id": instance.pk,
             "category": instance.category,
             "publisher": instance.published_by.username,
             "feeds": PublicationSerializer(instance=publication).data
