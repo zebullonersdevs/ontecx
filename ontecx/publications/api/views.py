@@ -3,9 +3,15 @@ from rest_framework import generics
 from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
 
 from ..models import Publication, PublicationCategory
-from .serializers import PublicationCreateSerializer, PublicationSerializer
+from .serializers import PublicationCreateSerializer, PublicationSerializer, PublicationCategorySerializer
 
 from .permission import IsOwner
+
+
+class PublicationCategoryAPIView(generics.ListAPIView):
+    queryset = PublicationCategory.objects.all()
+    serializer_class = PublicationCategorySerializer
+
 
 class PublicationListAPIView(generics.ListAPIView):
     queryset  = Publication.objects.all()

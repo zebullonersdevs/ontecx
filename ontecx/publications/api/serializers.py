@@ -1,19 +1,27 @@
 from rest_framework import serializers
 
 from comments.api.serializers import CommentSerializer
+from comments.models import Comments
 
 from ..models import Publication, PublicationCategory
 
+
+class PublicationCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = ("category",)
+        model = PublicationCategory
+
+    
 
 class PublicationSerializer(serializers.ModelSerializer):
     image_url = serializers.SerializerMethodField()
     uploaded_at = serializers.SerializerMethodField()
     category_name = serializers.SerializerMethodField()
     category_id = serializers.SerializerMethodField()
-    comments  = CommentSerializer(required=False, many=True)
+
     class Meta:
         model = Publication
-        fields = ("id", "title", "content",  "uploaded_at", "image_url", "category_name", "comments", "category_id")
+        fields = ("id", "title", "content",  "uploaded_at", "image_url", "category_name",  "category_id")
 
     def get_image_url(self, instance):
         return instance.image
@@ -26,6 +34,12 @@ class PublicationSerializer(serializers.ModelSerializer):
 
     def get_category_id(self, instance):
         return str(instance.publication_category.pk)
+
+    def to_representation(self, instance):
+        ret = super(PublicationSerializer, self).to_representation(instance)
+        comment_instance = Comments.objects.filter(commented_on=instance.pk)
+        ret["comments"]  = CommentSerializer(instance=comment_instance, many=True).data
+        return ret
 
 
 class PublicationCreateSerializer(serializers.ModelSerializer):
