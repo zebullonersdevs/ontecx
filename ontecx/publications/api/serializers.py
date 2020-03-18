@@ -11,7 +11,7 @@ class PublicationCategorySerializer(serializers.ModelSerializer):
         fields = ("category",)
         model = PublicationCategory
 
-    
+
 
 class PublicationSerializer(serializers.ModelSerializer):
     image_url = serializers.SerializerMethodField()
@@ -79,7 +79,7 @@ class PublicationCreateSerializer(serializers.ModelSerializer):
         data = {
             "id": instance.pk,
             "category": instance.category,
-            "publisher": instance.published_by.username,
+            "publisher": instance.published_by.name,
             "feeds": PublicationSerializer(instance=publication).data
         }
         return data
