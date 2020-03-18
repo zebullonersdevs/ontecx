@@ -8,3 +8,9 @@ from .serializers import UserSerializer
 
 User = get_user_model()
 
+class UserCreateAPIView(generics.CreateAPIView):
+    queryset = User
+    serializer_class = UserSerializer
+
+
+
