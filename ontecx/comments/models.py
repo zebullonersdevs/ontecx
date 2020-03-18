@@ -19,3 +19,15 @@ class Comments(models.Model):
     def __str__(self):
         return str(self.comment_by)
 
+
+class RepliedComment(models.Model):
+    replied_on = models.ForeignKey(Comments, on_delete=models.CASCADE, related_name="replied_on")
+    date_replied = models.DateTimeField(auto_now_add=True)
+    replies = models.CharField(_("replies"), max_length=150,)
+    replied_by  = models.ForeignKey(User, on_delete=models.CASCADE, related_name="replied_by")
+
+    class Meta:
+        ordering = ("-date_replied",)
+
+    def __str__(self):
+        return str(self.replied_on)
